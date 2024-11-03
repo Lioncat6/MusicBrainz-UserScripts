@@ -15,6 +15,7 @@
 
 (function() {
     'use strict';
+    
     let artistName = document.getElementsByClassName("artistheader")[0].getElementsByTagName("h1")[0]
     let mbid = document.location.href.split("/").pop()
     let spIcon = document.getElementsByClassName("spotify-favicon")[0]
@@ -24,4 +25,5 @@
         let htmlToInsert = `<a href="https://lioncat6.github.io/SAMBL/artist/?spid=${spId}&artist_mbid=${mbid}"><img src="https://lioncat6.github.io/SAMBL/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`
         artistName.innerHTML = artistName.innerHTML+htmlToInsert
     } 
+    
 })();
