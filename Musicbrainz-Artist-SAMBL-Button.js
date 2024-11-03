@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
-// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/
-// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/
+// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
+// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
 // @version      2024-11-03
