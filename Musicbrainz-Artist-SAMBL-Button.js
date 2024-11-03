@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
-// @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
-// @version      2024-11-03
 // @description  Adds a SAMBL Button to compatible artists
+// @version      2024-11-03
 // @author       Lioncat6
-// @match        https://musicbrainz.org/artist/*
-// @icon         https://lioncat6.github.io/SAMBL/assets/images/favicon.svg
-// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
-// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
+// @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
+// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
+// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
+// @match        https://musicbrainz.org/artist/*
+// @icon         https://lioncat6.github.io/SAMBL/assets/images/favicon.svg
 // @grant        none
 // ==/UserScript==
 
