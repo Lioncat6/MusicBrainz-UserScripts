@@ -3,6 +3,7 @@
 // @description  Adds a SAMBL Button to compatible artists
 // @version      2024-11-03
 // @author       Lioncat6
+// @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
