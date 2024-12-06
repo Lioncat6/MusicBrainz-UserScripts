@@ -1,23 +1,23 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
 // @description  Adds a SAMBL Button to compatible artists
-// @version      2024-11-05
+// @version      2024-12-06
 // @author       Lioncat6
 // @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
-// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
-// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
 // @match        https://musicbrainz.org/artist/*
 // @icon         https://lioncat6.github.io/SAMBL/assets/images/favicon.svg
 // @grant        none
+// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
+// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
 // ==/UserScript==
 
 (function () {
 	"use strict";
 	let artistName = document.getElementsByClassName("artistheader")[0].getElementsByTagName("h1")[0];
-	let mbid = document.location.href.split("/").pop();
+	let mbid = document.location.href.split("/artist/")[1].split("/")[0];
 	let spIcons = document.getElementsByClassName("spotify-favicon");
 	if (spIcons) {
 		let spids = "";
