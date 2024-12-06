@@ -17,7 +17,7 @@
 (function () {
 	"use strict";
 	let artistName = document.getElementsByClassName("artistheader")[0].getElementsByTagName("h1")[0];
-	let mbid = document.location.href.split("/").pop();
+	let mbid = document.location.href.split("/")[4];
 	let spIcons = document.getElementsByClassName("spotify-favicon");
 	if (spIcons) {
 		let spids = "";
