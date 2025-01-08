@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
 // @description  Adds a SAMBL Button to compatible artists
-// @version      2024-12-14
+// @version      2024-1-7
 // @author       Lioncat6
 // @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
 // @match        https://musicbrainz.org/artist/*
+// @match        https://beta.musicbrainz.org/artist/*
 // @icon         https://lioncat6.github.io/SAMBL/assets/images/favicon.svg
 // @grant        none
 // @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
