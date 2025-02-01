@@ -11,8 +11,8 @@
 // @match        https://beta.musicbrainz.org/artist/*
 // @icon         https://lioncat6.github.io/SAMBL/assets/images/favicon.svg
 // @grant        none
-// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
-// @updateURL    https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.js
+// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.user.js
+// @updateURL     https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.user.js
 // ==/UserScript==
 
 (function() {
