@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
 // @description  Adds a SAMBL Button to compatible artists
-// @version      2024-1-7
+// @version      2025-2-1
 // @author       Lioncat6
 // @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
