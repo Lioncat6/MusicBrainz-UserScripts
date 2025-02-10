@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         MB Release Seeding Helper
+// @name         MB Release Edit Seeding Helper
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
