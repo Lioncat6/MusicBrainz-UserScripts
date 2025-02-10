@@ -7,7 +7,7 @@
 // @match        https://test.musicbrainz.org/release/*/edit*
 // @match        https://beta.musicbrainz.org/release/*/edit*
 // @grant        none
-// @version      2/9/2025
+// @version      2/10/2025
 // @author       Lioncat6
 // @license      MIT
 // @description  Enables the seeding of MusicBrainz release editor fields via URL parameters. Fixes MBS-13688
@@ -28,7 +28,11 @@
 			try {
 				let field = document.getElementById(key);
 				if (field) {
-					field.value = value;
+					try {
+						setInputValue(field, value);
+					} catch (error) {
+						field.value = value;
+					}
 					bumpField(field);
 					foundField(key, value);
 				} else if (key.startsWith("events.")) {
@@ -47,15 +51,15 @@
 							let monthField = yearField.nextElementSibling;
 							let dayField = monthField.nextElementSibling;
 							if (key.endsWith(".year")) {
-								yearField.value = value;
+								setInputValue(yearField, value);
 								bumpField(yearField);
 								foundField(key, value);
 							} else if (key.endsWith(".month")) {
-								monthField.value = value;
+								setInputValue(monthField, value);
 								bumpField(monthField);
 								foundField(key, value);
 							} else if (key.endsWith(".day")) {
-								dayField.value = value;
+								setInputValue(dayField, value);
 								bumpField(dayField);
 								foundField(key, value);
 							}
