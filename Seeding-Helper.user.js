@@ -20,7 +20,7 @@
 	"use strict";
 	const maxAddedFields = 10;
 	async function updateFields() {
-		console.log("%c||MB Release Seeding Helper • Lioncat6||", "color: cyan;");
+		console.log("%c||MB Release Edit Seeding Helper • Lioncat6||", "color: cyan;");
         console.log("%c||Version 2/9/2025||", "color: cyan;");
         console.log("%c||Report issues at: https://github.com/Lioncat6/MusicBrainz-UserScripts/issues||", "color: cyan;");
 		const urlParams = new URLSearchParams(window.location.search);
