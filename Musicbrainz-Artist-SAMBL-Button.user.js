@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
 // @description  Adds a SAMBL Button to compatible artists
-// @version      2025-2-1.1
+// @version      2025-2-11
 // @author       Lioncat6
 // @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
@@ -33,10 +33,15 @@
                 }
             }
         }
-        let htmlToInsert = `<a href="https://lioncat6.github.io/SAMBL/artist/?spid=${spids}&artist_mbid=${mbid}" target="_blank"><img src="https://lioncat6.github.io/SAMBL/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
+        let url = `https://lioncat6.github.io/SAMBL/artist/?spids=${spids}&artist_mbid=${mbid}`;
+        
         if (spIcons.length > 1) {
-            htmlToInsert = `<a href="https://lioncat6.github.io/SAMBL/artist/?spids=${spids}&artist_mbid=${mbid}" target="_blank"><img src="https://lioncat6.github.io/SAMBL/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
+            url = `https://lioncat6.github.io/SAMBL/artist/?spids=${spids}&artist_mbid=${mbid}`;
         }
+        if (spId = "" || !spId) {
+            url = `https://lioncat6.github.io/SAMBL/search/?query=${artistName.innerText}`;
+        }
+        let htmlToInsert = `<a href="${url}" target="_blank"><img src="https://lioncat6.github.io/SAMBL/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
         artistName.innerHTML = artistName.innerHTML + htmlToInsert;
     }
 })();
