@@ -16,6 +16,7 @@ Adds a button to quickly set a release as not having a label
 ## [MB Release Edit Seeding Helper](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/Seeding-Helper.user.js)
 ### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Seeding-Helper.user.js)**
 Enables the seeding of MusicBrainz release editor fields via URL parameters. Fixes [MBS-13688](https://tickets.metabrainz.org/browse/MBS-13688)
+Follows this documentation: https://musicbrainz.org/doc/Development/Seeding/Release_Editor
 
 ![image](https://github.com/user-attachments/assets/10a958bd-1014-43c8-bf61-d8be5038bd80)
 
