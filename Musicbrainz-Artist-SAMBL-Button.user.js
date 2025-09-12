@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Musicbrainz Artist SAMBL Button
 // @description  Adds a SAMBL Button to compatible artists
-// @version      2025-8-11
+// @version      2025-9-12
 // @author       Lioncat6
 // @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
@@ -9,7 +9,7 @@
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
 // @match        https://musicbrainz.org/artist/*
 // @match        https://beta.musicbrainz.org/artist/*
-// @icon         https://lioncat6.github.io/SAMBL/assets/images/favicon.svg
+// @icon         https://sambl.lioncat6.com/assets/images/favicon.svg
 // @grant        none
 // @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.user.js
 // @updateURL     https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Musicbrainz-Artist-SAMBL-Button.user.js
@@ -47,7 +47,7 @@
         if (spId = "" || !spId) {
             url = `https://sambl.lioncat6.com/search/?query=${artistName.innerText}`;
         }
-        let htmlToInsert = `<a href="${url}" target="_blank"><img src="https://lioncat6.github.io/SAMBL/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
+        let htmlToInsert = `<a href="${url}" target="_blank"><img src="https://sambl.lioncat6.com/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
         artistName.innerHTML = artistName.innerHTML + htmlToInsert;
     }
 })();
