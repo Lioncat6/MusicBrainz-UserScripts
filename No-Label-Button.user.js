@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Edit Release: No Label & No Cat. no Button
 // @description  Adds a No Label & No Cat. no button to MusicBrainz release editor
-// @version      2025-8-5
+// @version      2026-1-16
 // @author       Lioncat6
 // @license      MIT
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
@@ -39,12 +39,10 @@
                 if (labelInput) {
                     labelInput.value = 'https://musicbrainz.org/label/157afde4-4bf5-4039-8ad2-5a15acc85176';
                     //trigger update
-                    const event = new KeyboardEvent('keydown', {
-                        key: '',
-                        bubbles: true,
-                        cancelable: true
-                    });
-                    labelInput.dispatchEvent(event);
+                    const inputEvent = new Event('input', { bubbles: true });
+                    const changeEvent = new Event('change', { bubbles: true });
+                    labelInput.dispatchEvent(inputEvent);
+                    labelInput.dispatchEvent(changeEvent);
                 }
             });
 
@@ -60,12 +58,10 @@
                 const catNoInput = document.getElementById("catno-0");
                 if (catNoInput) {
                     catNoInput.value = '[none]';
-                    const event = new KeyboardEvent('keydown', {
-                        key: '',
-                        bubbles: true,
-                        cancelable: true
-                    });
-                    catNoInput.dispatchEvent(event);
+                    const inputEvent = new Event('input', { bubbles: true });
+                    const changeEvent = new Event('change', { bubbles: true });
+                    catNoInput.dispatchEvent(inputEvent);
+                    catNoInput.dispatchEvent(changeEvent);
                 }
             });
 
