@@ -66,8 +66,15 @@ function injectCSS() {
     document.head.appendChild(styleElement);
 }
 
-function runSearch() {
-
+async function runSearch(query) {
+    let url = `https://musicbrainz.org/ws/2/${artistSearch ? "artist" : "work"}?query=${query}&fmt=json`
+    const response = await fetch(url);
+    if (response.ok){
+        return await response.json();
+    } else {
+        console.error(response.statusText);
+        return null;
+    }
 }
 
 function checkFocus(searchBox = false) {
