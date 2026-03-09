@@ -24,3 +24,4 @@ Follows this documentation: https://musicbrainz.org/doc/Development/Seeding/Rele
 ### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Event-Editor-Search.user.js)**
 Search for entities in the musicbrainz event setlist editor
 
+<img width="660" height="466" alt="image" src="https://github.com/user-attachments/assets/af55805f-9f9c-4a97-b711-b7df5572c4fa" />
