@@ -10,7 +10,7 @@
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
-// @version     03-09-2026
+// @version     03-09-2026.1
 // @author      Lioncat6
 // @license      CC-NC
 // @description Search for entities in the musicbrainz event setlist editor
@@ -20,10 +20,6 @@
 
 (function () {
     document.addEventListener('keydown', (event) => {
-        // Log the key pressed to the console
-        console.log(`Key pressed: ${event.key}`);
-
-        // Perform an action based on a specific key
         if (event.key === '@') {
             openSearch(event, true);
         } else if (event.key === '*') {
@@ -137,14 +133,12 @@ function selectResult(up = false) {
                     let name = result.dataset.name;
                     let mbid = result.dataset.mbid;
                     selectedResult = { name: name, mbid: mbid }
-                    console.log(selectedResult)
                 } else {
                     result.className = "eventSearchResult";
                 }
             }
         }
     }
-    console.log(selectedResultIndex);
 }
 
 function handleEnter() {
@@ -163,12 +157,45 @@ function handleEnter() {
             selectedResultIndex = null;
         } else {
             prevQuery = query;
-            runSearch(query).then((results) => {
-                if (results) {
-                    handleSearchResults(results);
-                }
-            });
+            const regex = /musicbrainz\.org\/([a-z\-]+)\/([0-9a-fA-F\-]{36})/;
+            const match = query.match(regex);
+            if (match) {
+                lookupEntity(match[1], match[2]).then((result) => {
+                    if (result){
+                        handleSearchResults(result);
+                    }
+                })
+            } else {
+                runSearch(query).then((results) => {
+                    if (results) {
+                        handleSearchResults(results);
+                    }
+                });
+            }
+            
         }
+    }
+}
+
+async function lookupEntity(type, id) {
+    console.log(`Looking up ${type} ${id}`)
+    if (!type || !id) return null;
+    if (type == "artist") {
+        artistSearch = true;
+    } else if (type ==  "work"){
+        artistSearch = false;
+    } else {
+        console.log(type)
+        window.alert("Only artist and work URLs are supported here!")
+        return null;
+    }
+    let url = `https://musicbrainz.org/ws/2/${type}/${id}?fmt=json&inc=artist-rels`
+    const response = await fetch(url);
+    if (response.ok) {
+        return await response.json();
+    } else {
+        console.error(response.statusText);
+        return null;
     }
 }
 
@@ -219,7 +246,6 @@ function openSearch(event, isArtist) {
         const focusPosition = checkFocus();
         if (focusPosition != null) {
             cursorPosition = focusPosition;
-            console.log(cursorPosition);
             event.preventDefault();
             injectSearchBox();
             focusSearch();
@@ -291,10 +317,11 @@ function handleSearchResults(searchJson) {
         rawObjects = searchJson.artists;
     } else if (searchJson.works) {
         rawObjects = searchJson.works;
+    } else {
+        rawObjects = [searchJson];
     }
     var results = [];
     rawObjects.forEach((result, index) => {
-        console.log(result.name)
         let artistString = ""
         if (!artistSearch) {
             let artists = [];
