@@ -1,10 +1,21 @@
 // ==UserScript==
-// @name        Event edit search
+// @name        MusicBrainz event setlist search
 // @namespace   Violentmonkey Scripts
 // @match       https://musicbrainz.org/event/*/edit*
-// @version     1.0
+// @match       https://beta.musicbrainz.org/event/*/edit*
+// @match       https://test.musicbrainz.org/event/*/edit*
+// @match       https://musicbrainz.org/event/create*
+// @match       https://beta.musicbrainz.org/event/create*
+// @match       https://test.musicbrainz.org/event/create*
+// @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
+// @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
+// @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
+// @version     03-09-2026
 // @author      Lioncat6
-// @description 3/7/2026, 9:05:52 PM
+// @license      CC-NC
+// @description Search for entities in the musicbrainz event setlist editor
+// @downloadURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Event-Editor-Search.user.js
+// @updateURL     https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Event-Editor-Search.user.js
 // ==/UserScript==
 
 (function () {
@@ -18,7 +29,11 @@
         } else if (event.key === '*') {
             openSearch(event, false);
         } else if (event.key === 'Enter') {
-            runSearch();
+            handleEnter();
+        } else if (event.key === 'ArrowDown') {
+            selectResult();
+        } else if (event.key === 'ArrowUp') {
+            selectResult(true);
         } else if (event.key === 'Escape') {
             closeSearch();
         }
@@ -27,6 +42,16 @@
 })();
 
 let artistSearch = false;
+
+let selectedResultIndex = null;
+/**
+ * @type ({name: string, mbid: string} | null)
+ */
+let selectedResult = null; // {name, mbid}
+
+let cursorPosition = 0;
+
+let prevQuery = null;
 
 function injectCSS() {
     const css = `
@@ -41,9 +66,6 @@ function injectCSS() {
         }
         .eventSearchBox {
             display: flex;
-            position: absolute;
-            top: 50%;
-            left: 50%;
             z-index: 10;
             flex-direction: column;
         }
@@ -55,10 +77,32 @@ function injectCSS() {
             display: flex;
             padding: 2px;
             border: 2px solid gray;
+            align-items: center;
         }
         .resultDescription {
-            margin-left: 2px;
+            margin-left: 6px;
+            font-size: smaller;
             color: gray;
+        }
+        .resultName {
+            color: black;
+        }
+        .eventSearchResult.selected {
+            border: 4px solid green;
+        }
+        .eventSearchInput {
+            font-size: large;
+        }
+        .eventSearchBoxWrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
         }
     `
     const styleElement = document.createElement('style');
@@ -66,10 +110,76 @@ function injectCSS() {
     document.head.appendChild(styleElement);
 }
 
+function selectResult(up = false) {
+    if (checkFocus(true)) {
+        const resultsArea = document.getElementById("eventSearchResults");
+        let results = resultsArea?.childNodes || [];
+        if (results.length > 0) {
+            if (selectedResultIndex == null) {
+                selectedResultIndex = 0;
+            } else if (up) {
+                if (selectedResultIndex - 1 < 0) {
+                    selectedResultIndex = results.length - 1
+                } else {
+                    selectedResultIndex--;
+                }
+            } else {
+                if (selectedResultIndex + 1 > results.length - 1) {
+                    selectedResultIndex = 0;
+                } else {
+                    selectedResultIndex++;
+                }
+            }
+            for (let i = 0; i < results.length; i++) {
+                let result = results[i];
+                if (i == selectedResultIndex) {
+                    result.className = "eventSearchResult selected";
+                    let name = result.dataset.name;
+                    let mbid = result.dataset.mbid;
+                    selectedResult = { name: name, mbid: mbid }
+                    console.log(selectedResult)
+                } else {
+                    result.className = "eventSearchResult";
+                }
+            }
+        }
+    }
+    console.log(selectedResultIndex);
+}
+
+function handleEnter() {
+    const searchBoxInput = document.getElementById("eventSearchInput");
+    const query = searchBoxInput ? searchBoxInput.value : null;
+    if (checkFocus(true)) {
+        if (selectedResultIndex != null && selectedResult != null && query == prevQuery) {
+            closeSearch(false);
+            const setListInput = document.getElementById("id-edit-event.setlist");
+            if (setListInput) {
+                let setList = setListInput.value || "";
+                let creditString = `${artistSearch ? "@" : "*"} [${selectedResult.mbid}|${selectedResult.name}]`
+                setListInput.value = setList.substring(0, cursorPosition) + creditString + setList.substring(cursorPosition)
+            }
+            selectedResult = null;
+            selectedResultIndex = null;
+        } else {
+            prevQuery = query;
+            runSearch(query).then((results) => {
+                if (results) {
+                    handleSearchResults(results);
+                }
+            });
+        }
+    }
+}
+
 async function runSearch(query) {
+    if (!query) {
+        return null;
+    }
+    console.log("Running query for " + query)
     let url = `https://musicbrainz.org/ws/2/${artistSearch ? "artist" : "work"}?query=${query}&fmt=json`
     const response = await fetch(url);
-    if (response.ok){
+    if (response.ok) {
         return await response.json();
     } else {
         console.error(response.statusText);
@@ -106,8 +216,9 @@ function focusSearch() {
 function openSearch(event, isArtist) {
     artistSearch = isArtist
     if (!isInjected()) {
-        const cursorPosition = checkFocus();
-        if (cursorPosition != null) {
+        const focusPosition = checkFocus();
+        if (focusPosition != null) {
+            cursorPosition = focusPosition;
             console.log(cursorPosition);
             event.preventDefault();
             injectSearchBox();
@@ -121,17 +232,27 @@ function isInjected() {
     return (container != undefined && container != null);
 }
 
-function closeSearch() {
+function closeSearch(hitEscape = true) {
+    const searchBoxInput = document.getElementById("eventSearchInput");
+    const query = searchBoxInput ? searchBoxInput.value : "";
     const container = document.getElementById("eventSearchBoxWrapper");
     if (container) {
         container.remove();
     }
+    const setListInput = document.getElementById("id-edit-event.setlist");
+    if (setListInput && hitEscape) {
+        let setList = setListInput.value || "";
+        let creditString = `${artistSearch ? "@" : "*"} ${query}`
+        setListInput.value = setList.substring(0, cursorPosition) + creditString + setList.substring(cursorPosition)
+    }
+    setListInput.focus();
 }
 
 
 function injectSearchBox() {
     var container = document.createElement("div");
     container.id = "eventSearchBoxWrapper";
+    container.className = "eventSearchBoxWrapper";
     var background = document.createElement("div");
     background.className = "searchBoxBackground";
     container.appendChild(background);
@@ -140,6 +261,7 @@ function injectSearchBox() {
     box.className = "eventSearchBox";
     var input = document.createElement("input");
     input.id = "eventSearchInput";
+    input.className = "eventSearchInput";
     box.appendChild(input);
     var results = document.createElement("div");
     results.id = "eventSearchResults";
@@ -160,20 +282,49 @@ function clearSearchResults() {
     }
 }
 
-function handleSearchResults(results) {
+function handleSearchResults(searchJson) {
+    selectedResult = null;
+    selectedResultIndex = null;
+    clearSearchResults();
+    let rawObjects = [];
+    if (searchJson.artists) {
+        rawObjects = searchJson.artists;
+    } else if (searchJson.works) {
+        rawObjects = searchJson.works;
+    }
     var results = [];
-    results.forEach((result, index) => {
-        var result = document.createElement("div");
-        result.id = "eventSearchResult_" + index;
-        result.className = "eventSearchResult";
-        var name = document.createElement("div");
+    rawObjects.forEach((result, index) => {
+        console.log(result.name)
+        let artistString = ""
+        if (!artistSearch) {
+            let artists = [];
+            result.relations?.forEach(relation => {
+                if (relation.type == "composer" || relation.type == "lyricist" || relation.type == "writer" && relation.artist) {
+                    artists.push(relation.artist.name);
+                }
+            })
+            artistString = [... new Set(artists)].join(", ");
+        }
+        var resultBox = document.createElement("div");
+        resultBox.id = "eventSearchResult_" + index;
+        resultBox.className = "eventSearchResult";
+        resultBox.dataset.name = result.name || result.title || "[unkown]";
+        resultBox.dataset.description = result.disambiguation || "";
+        resultBox.dataset.mbid = result.id || null;
+        var name = document.createElement("a");
         name.className = "resultName";
         name.innerText = result.name || result.title || "[unkown]";
-        result.appendChild(name);
+        name.href = `https://musicbrainz.org/${artistSearch ? "artist" : "work"}/${result.id}`
+        name.target = "_blank"
+        resultBox.appendChild(name);
         var description = document.createElement("div");
         description.className = "resultDescription";
-        description.innerText = result.disambigation || "";
-        result.appendChild(description);
-        results.push(result);
+        description.innerText = `${artistString ? artistString + " " : ""}${result.disambiguation || ""}`;
+        resultBox.appendChild(description);
+        results.push(resultBox);
     });
+    var resultsArea = document.getElementById("eventSearchResults");
+    results.forEach((result) => {
+        resultsArea.appendChild(result)
+    })
 }

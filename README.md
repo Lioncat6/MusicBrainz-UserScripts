@@ -20,3 +20,7 @@ Follows this documentation: https://musicbrainz.org/doc/Development/Seeding/Rele
 
 ![image](https://github.com/user-attachments/assets/10a958bd-1014-43c8-bf61-d8be5038bd80)
 
+## [MusicBrainz event setlist search](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/Event-Editor-Search.user.js)
+### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Event-Editor-Search.user.js)**
+Search for entities in the musicbrainz event setlist editor
+
