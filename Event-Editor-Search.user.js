@@ -299,7 +299,7 @@ function handleSearchResults(searchJson) {
         if (!artistSearch) {
             let artists = [];
             result.relations?.forEach(relation => {
-                if (relation.type == "composer" || relation.type == "lyricist" || relation.type == "writer" && relation.artist) {
+                if ((relation.type == "composer" || relation.type == "lyricist" || relation.type == "writer") && relation.artist) {
                     artists.push(relation.artist.name);
                 }
             })
