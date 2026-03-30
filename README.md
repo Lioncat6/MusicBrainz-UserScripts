@@ -25,3 +25,8 @@ Follows this documentation: https://musicbrainz.org/doc/Development/Seeding/Rele
 Search for entities in the musicbrainz event setlist editor
 
 <img width="660" height="466" alt="image" src="https://github.com/user-attachments/assets/af55805f-9f9c-4a97-b711-b7df5572c4fa" />
+
+
+## [Genius MusicBrainz Buttons](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/Genius-Musicbrainz-Buttons.user.js)
+### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Genius-Musicbrainz-Buttons.user.js)**
+Adds MusicBrainz buttons to all Genius pages & Artist links
