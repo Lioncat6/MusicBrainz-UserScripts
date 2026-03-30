@@ -7,7 +7,7 @@
 // @homepageURL https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=genius.com
 // @grant       none
-// @version     03-30-2026
+// @version     03-30-2026.1
 // @author      Lioncat6
 // @description Adds MusicBrainz buttons to Genius pages
 // @downloadURL https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Genius-Musicbrainz-Buttons.user.js
@@ -60,6 +60,7 @@
             }
             .mbIconLink {
                 transform: translateY(-4px);
+                overflow: visible;
             }
             .mbArtistLink {
                 margin-left: 0.25rem;
@@ -199,7 +200,7 @@
                 const mbLink = document.createElement('a');
                 mbLink.href = urlInfo.mbUrl;
                 mbLink.target = "_blank";
-                mbLink.innerHTML = `<svg height="1em" width="1em" viewBox="0 0 26 16" class="inline_icon mbIconLink" style="color: ${document.defaultView.getComputedStyle(el).color || 'inherit'}; display: inline; vertical-align: -0.125em;"><g><path d="m13 1-12 7v14l12 7z" fill="currentColor"/><path d="m14 1 12 7v14l-12 7z" fill="currentColor"/></g></svg>`;
+                mbLink.innerHTML = `<svg height="1em" width="1em" viewBox="0 0 26 16" class="mbIconLink" style="color: ${document.defaultView.getComputedStyle(el).color || 'inherit'}; display: inline; vertical-align: -0.125em;"><g><path d="m13 1-12 7v14l12 7z" fill="currentColor"/><path d="m14 1 12 7v14l-12 7z" fill="currentColor"/></g></svg>`;
                 mbLink.title = `View '${urlInfo.urlName}' on MusicBrainz`;
                 mbLink.className = 'mbArtistLink';
                 el.parentElement.insertBefore(mbLink, el.nextSibling);
