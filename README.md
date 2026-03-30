@@ -30,3 +30,8 @@ Search for entities in the musicbrainz event setlist editor
 ## [Genius MusicBrainz Buttons](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/Genius-Musicbrainz-Buttons.user.js)
 ### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Genius-Musicbrainz-Buttons.user.js)**
 Adds MusicBrainz buttons to all Genius pages & Artist links
+
+<img width="300" height="220" alt="image" src="https://github.com/user-attachments/assets/10d0079d-f70c-428a-aa46-890be3b32bcb" />
+<img width="300" height="232" alt="image" src="https://github.com/user-attachments/assets/b8eb5037-3740-4619-a9ea-7e0a2995f0a6" />
+<img width="450" height="450" alt="image" src="https://github.com/user-attachments/assets/5fb6c72d-fca2-4186-837f-d90f2affda15" />
+<img width="450" height="327" alt="image" src="https://github.com/user-attachments/assets/5777e51d-a849-4b80-ada8-90423f3e1f54" />
