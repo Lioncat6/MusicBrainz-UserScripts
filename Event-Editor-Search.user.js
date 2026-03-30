@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        MusicBrainz event setlist search
-// @namespace   Violentmonkey Scripts
+// @namespace   https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @match       https://musicbrainz.org/event/*/edit*
 // @match       https://beta.musicbrainz.org/event/*/edit*
 // @match       https://test.musicbrainz.org/event/*/edit*
@@ -10,7 +10,7 @@
 // @namespace    https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @homepageURL  https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @supportURL   https://github.com/Lioncat6/MusicBrainz-UserScripts/issues
-// @version     03-09-2026.1
+// @version     03-30-2026
 // @author      Lioncat6
 // @license      CC-NC
 // @description Search for entities in the musicbrainz event setlist editor
