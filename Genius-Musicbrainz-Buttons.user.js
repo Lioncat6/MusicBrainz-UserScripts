@@ -7,7 +7,7 @@
 // @homepageURL https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=genius.com
 // @grant       none
-// @version     03-30-2026.1
+// @version     03-30-2026.2
 // @author      Lioncat6
 // @description Adds MusicBrainz buttons to Genius pages
 // @downloadURL https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Genius-Musicbrainz-Buttons.user.js
@@ -23,6 +23,29 @@
     const scriptName = "%c||Genius MusicBrainz Buttons||";
 
     const allowed_types = ['artist', 'work', 'release_group'];
+
+    let lastSetMarker = null;
+
+    function findRetry(query) {
+        let target = document.querySelector(query);
+        let tries = 0;
+        const maxTries = 4;
+        const intervalTime = 300; // ms
+
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(() => {
+                target = document.querySelector(query);
+                if (target) {
+                    clearInterval(interval);
+                    resolve(target);
+                } else if (tries >= maxTries) {
+                    clearInterval(interval);
+                    resolve(null);
+                }
+                tries++;
+            }, intervalTime);
+        }); 
+    }
 
     function injectCss() {
         const style = document.createElement('style');
@@ -69,9 +92,9 @@
         document.head.appendChild(style);
     }
 
-    function injectButtons(mbUrl, urlName) {
+    async function injectButtons(mbUrl, urlName) {
         if (window.location.href.match(/genius\.com\/artists\/([^/?]+)/)) {
-            let linkContainer = document.querySelector('.u-text_center.u-vertical_margins');
+            let linkContainer = await findRetry('.u-text_center.u-vertical_margins');
             if (!linkContainer) {
                 console.error(`${scriptName} %cButton injection failed`, "color: cyan;", "color: red;");
                 return;
@@ -91,7 +114,7 @@
             console.log(`${scriptName} %cButton injected for artist '${urlName}'`, "color: cyan;", "color: green;");
         }
         if (window.location.href.match(/genius\.com\/([^/?]+)-lyrics/)) {
-            let linkContainer = document.querySelector('.frog');
+            let linkContainer = await findRetry('.ContributorSidebar__Body-sc-b06c6d43-2');
             if (!linkContainer) {
                 console.warn(`${scriptName} %cCould not find link container by class; Falling back to id`, "color: cyan;", "color: orange;");
                 let linkContainerChild = document.getElementById('collapsible-song-info-content');
@@ -109,11 +132,12 @@
             mbButton.className = 'mbWorkLink';
             mbButton.innerText = 'View on MusicBrainz';
             mbButton.title = `View '${urlName}' on MusicBrainz`;
+            mbButton.appendChild(getMarker());
             linkContainer.appendChild(mbButton);
             console.log(`${scriptName} %cButton injected for work '${urlName}'`, "color: cyan;", "color: green;");
         }
         if (window.location.href.match(/genius\.com\/albums\/([^/?]+)/)) {
-            let linkContainer = document.querySelector('.header_with_cover_art-primary_info');
+            let linkContainer = await findRetry('.header_with_cover_art-primary_info');
             if (!linkContainer) {
                 console.error(`${scriptName} %cButton injection failed`, "color: cyan;", "color: red;");
                 return;
@@ -124,6 +148,7 @@
             mbButton.className = 'mbRGLink';
             mbButton.innerText = 'View on MusicBrainz';
             mbButton.title = `View '${urlName}' on MusicBrainz`;
+            mbButton.appendChild(getMarker());
             linkContainer.appendChild(mbButton);
             console.log(`${scriptName} %cButton injected for release group '${urlName}'`, "color: cyan;", "color: green;");
         }
@@ -203,6 +228,7 @@
                 mbLink.innerHTML = `<svg height="1em" width="1em" viewBox="0 0 26 16" class="mbIconLink" style="color: ${document.defaultView.getComputedStyle(el).color || 'inherit'}; display: inline; vertical-align: -0.125em;"><g><path d="m13 1-12 7v14l12 7z" fill="currentColor"/><path d="m14 1 12 7v14l-12 7z" fill="currentColor"/></g></svg>`;
                 mbLink.title = `View '${urlInfo.urlName}' on MusicBrainz`;
                 mbLink.className = 'mbArtistLink';
+                mbLink.appendChild(getMarker());
                 el.parentElement.insertBefore(mbLink, el.nextSibling);
                 console.log(`${scriptName} %cAdded MB link for artist URL ${el.href}`, "color: cyan;", "color: green;");
             }
@@ -210,28 +236,79 @@
 
     }
 
-    try {
-        const { mbUrl, urlName, resource } = await fetchUrl();
-        try {
-                injectCss();
-        } catch (error) {
-            console.error(`${scriptName} %cError injecting CSS`, "color: cyan;", "color: red;", error);
-        }
-        if (mbUrl) {
-            try {
-                injectButtons(mbUrl, urlName);
-            } catch (error) {
-                console.error(`${scriptName} %cError injecting buttons`, "color: cyan;", "color: red;", error);
-            }
-        }
-        try {
-            await checkArtistLinks();
-        } catch (error) {
-            console.error(`${scriptName} %cError injecting artist links`, "color: cyan;", "color: red;", error);
-        }
-    } catch (error) {
-        console.error(`${scriptName} %cError running script`, "color: cyan;", "color: red;", error);
+    function getMarker() {
+        const marker = document.createElement('meta');
+        marker.className = 'genius-musicbrainz-buttons-injected';
+        return marker;
     }
 
+    function isInjected() {
+        return document.querySelector('.genius-musicbrainz-buttons-injected') !== null;
+    }
+
+    function setRoutableMarker() {
+        const routableParent = document.querySelector('routable-page');
+        if (routableParent) {
+            const marker = getMarker();
+            marker.id='genius-musicbrainz-buttons-routable-marker';
+            routableParent.firstElementChild.firstElementChild.appendChild(marker);
+        }
+    }
+
+    async function runInjector() {
+        try {
+            if (!isInjected()) {
+                console.log(`${scriptName} %cRunning injector`, "color: cyan;", "color: yellow;");
+                const { mbUrl, urlName, resource } = await fetchUrl();
+                try {
+                    injectCss();
+                } catch (error) {
+                    console.error(`${scriptName} %cError injecting CSS`, "color: cyan;", "color: red;", error);
+                }
+                if (mbUrl) {
+                    try {
+                        await injectButtons(mbUrl, urlName);
+                    } catch (error) {
+                        console.error(`${scriptName} %cError injecting buttons`, "color: cyan;", "color: red;", error);
+                    }
+                }
+                try {
+                    await checkArtistLinks();
+                } catch (error) {
+                    console.error(`${scriptName} %cError injecting artist links`, "color: cyan;", "color: red;", error);
+                }
+                try {
+                    setRoutableMarker();
+                } catch (error) {
+                    console.error(`${scriptName} %cError setting routable marker`, "color: cyan;", "color: red;", error);
+                }
+            } else {
+                console.log("b")
+            }
+        } catch (error) {
+            console.error(`${scriptName} %cError running script`, "color: cyan;", "color: red;", error);
+        }
+    }
+
+    function watchRoutableMarker() {
+        console.log(`${scriptName} %cWatching page change...`, "color: cyan;", "color: yellow;");
+        let watcher = setInterval(async () => {
+            if (!document.getElementById('genius-musicbrainz-buttons-routable-marker')) {
+                clearInterval(watcher);
+                await runInjector();
+            }
+        }, 100)
+    }
+
+    await runInjector();
+
+    const originalPushState = history.pushState;
+    history.pushState = function () { //Watching for location changes, since genius is partially react
+        originalPushState.apply(this, arguments);
+        watchRoutableMarker();
+    };
+    window.addEventListener("popstate", (event) => { //Watching for the back/forward buttons being used
+        watchRoutableMarker();
+    });
 
 })();
