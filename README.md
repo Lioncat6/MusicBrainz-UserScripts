@@ -7,11 +7,12 @@ Adds a button to go to an artists [SAMBL](https://lioncat6.github.io/SAMBL/) loo
    
 ![image](https://github.com/user-attachments/assets/83abc041-48c1-4582-8ec7-2564731edc21)
 
-## [Edit Release: No Label Button](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/No-Label-Button.user.js)
+## [Edit Release: No Label & No Cat. no Button](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/No-Label-Button.user.js)
 ### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/No-Label-Button.user.js)**
-Adds a button to quickly set a release as not having a label
+Adds a button to quickly set a release as not having a label or catalogue number
 
-![image](https://github.com/user-attachments/assets/facdc6dc-ce45-407d-a726-8b96a9ff8ebb)
+<img width="512" height="72" alt="image" src="https://github.com/user-attachments/assets/501130f9-1c5a-4c32-86d0-f336178dc697" />
+
 
 ## [MB Release Edit Seeding Helper](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/Seeding-Helper.user.js)
 ### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Seeding-Helper.user.js)**
