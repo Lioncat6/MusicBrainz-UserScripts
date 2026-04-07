@@ -4,10 +4,12 @@
 // @match       https://genius.com/artists/*
 // @match       https://genius.com/albums/*
 // @match       https://genius.com/*-lyrics
+// @match       https://genius.com/search?q=*
+// @match       https://genius.com/artists-index/*
 // @homepageURL https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=genius.com
 // @grant       none
-// @version     03-30-2026.2
+// @version     04-06-2026
 // @author      Lioncat6
 // @description Adds MusicBrainz buttons to Genius pages
 // @downloadURL https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Genius-Musicbrainz-Buttons.user.js
@@ -188,34 +190,39 @@
             return urlData ? [urlData] : [];
         }
         const results = [];
-        let response = await fetch(`https://musicbrainz.org/ws/2/url?fmt=json${urls.map(url => `&resource=${encodeURIComponent(url)}`).join('')}&inc=artist-rels+work-rels+release-group-rels`);
-        if (response.ok) {
-            let data = await response.json();
-            for (let url of data.urls) {
-                let mbUrl = null;
-                let urlName = null;
-                if (url.relations && url.relations.length > 0) {
-                    for (let rel of url.relations) {
-                        if (allowed_types.includes(rel['target-type'])) {
-                            mbUrl = `https://musicbrainz.org/${rel['target-type'].replace(/_/g, '-')}/${rel[rel['target-type']]?.id}`;
-                            urlName = rel[rel['target-type']]?.name || rel[rel['target-type']]?.title;
-                            break;
+        const batchSize = 100;
+        for (let i = 0; i < urls.length; i += batchSize) {
+            const batch = urls.slice(i, i + batchSize);
+            let response = await fetch(`https://musicbrainz.org/ws/2/url?fmt=json${batch.map(url => `&resource=${encodeURIComponent(url)}`).join('')}&inc=artist-rels+work-rels+release-group-rels`);
+            if (response.ok) {
+                let data = await response.json();
+                for (let url of data.urls) {
+                    let mbUrl = null;
+                    let urlName = null;
+                    if (url.relations && url.relations.length > 0) {
+                        for (let rel of url.relations) {
+                            if (allowed_types.includes(rel['target-type'])) {
+                                mbUrl = `https://musicbrainz.org/${rel['target-type'].replace(/_/g, '-')}/${rel[rel['target-type']]?.id}`;
+                                urlName = rel[rel['target-type']]?.name || rel[rel['target-type']]?.title;
+                                break;
+                            }
                         }
                     }
+                    if (mbUrl) {
+                        results.push({ mbUrl, urlName, resource: url.resource });
+                        console.log(`${scriptName} %cFound MB id: ${mbUrl} for URL ${url.resource}`, "color: cyan;", "color: magenta; font-style: italic;");
+                    }
                 }
-                if (mbUrl) {
-                    results.push({ mbUrl, urlName, resource: url.resource });
-                    console.log(`${scriptName} %cFound MB id: ${mbUrl} for URL ${url.resource}`, "color: cyan;", "color: magenta; font-style: italic;");
-                }
+            } else {
+                console.error(`${scriptName} %cError fetching data for URLs: ${response.status} ${response.statusText}`, "color: cyan;", "color: red;");
             }
-        } else {
-            console.error(`${scriptName} %cError fetching data for URLs: ${response.status} ${response.statusText}`, "color: cyan;", "color: red;");
         }
         return results;
     }
 
     async function checkArtistLinks() {
-        let linkElements = document.querySelectorAll('a[href*="genius.com/artists/"]');
+        const blackListClasses = ['mini_card'];
+        let linkElements = Array.from(document.querySelectorAll('a[href*="genius.com/artists/"]')).filter((element) => element.className.split(" ").every((className) => !blackListClasses.includes(className)));
         console.log(`${scriptName} %cChecking ${linkElements.length} artist links`, "color: cyan;", "color: blue;");
         let urlsToCheck = linkElements ? Array.from(linkElements).map(el => el.href) : [];
         let urlData = await fetchUrls(Array.from(new Set(urlsToCheck)));
