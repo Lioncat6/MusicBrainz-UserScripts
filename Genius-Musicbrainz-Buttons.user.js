@@ -4,12 +4,13 @@
 // @match       https://genius.com/artists/*
 // @match       https://genius.com/albums/*
 // @match       https://genius.com/*-lyrics
+// @match       https://genius.com/*-annotated
 // @match       https://genius.com/search?q=*
 // @match       https://genius.com/artists-index/*
 // @homepageURL https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=genius.com
 // @grant       none
-// @version     04-06-2026
+// @version     04-24-2026
 // @author      Lioncat6
 // @description Adds MusicBrainz buttons to Genius pages
 // @downloadURL https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/Genius-Musicbrainz-Buttons.user.js
