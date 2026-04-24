@@ -168,7 +168,7 @@
             let data = await response.json();
             if (data.relations && data.relations.length > 0) {
                 for (let rel of data.relations) {
-                    if (allowed_types.includes(rel['target-type'])) {
+                    if (allowed_types.includes(rel['target-type']) && rel.ended != true) {
                         console.log(`${scriptName} %cFound MB id: ${rel[rel['target-type']]?.id} for ${rel['target-type']} ${rel[rel['target-type']]?.name || rel[rel['target-type']]?.title}`, "color: cyan;", `color: magenta; font-style: italic;`);
                         mbUrl = `https://musicbrainz.org/${rel['target-type'].replace(/_/g, '-')}/${rel[rel['target-type']]?.id}`;
                         urlName = rel[rel['target-type']]?.name || rel[rel['target-type']]?.title;
@@ -202,7 +202,7 @@
                     let urlName = null;
                     if (url.relations && url.relations.length > 0) {
                         for (let rel of url.relations) {
-                            if (allowed_types.includes(rel['target-type'])) {
+                            if (allowed_types.includes(rel['target-type'])  && rel.ended != true) {
                                 mbUrl = `https://musicbrainz.org/${rel['target-type'].replace(/_/g, '-')}/${rel[rel['target-type']]?.id}`;
                                 urlName = rel[rel['target-type']]?.name || rel[rel['target-type']]?.title;
                                 break;
