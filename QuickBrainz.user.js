@@ -41,7 +41,7 @@
                 top: 0;
                 left: 0;
                 min-height: 100%;
-                z-index: 1;
+                z-index: 10;
                 pointer-events: none;
             }
             .gbz-button {
@@ -61,6 +61,7 @@
                 animation: fadeIn 0.2s ease-in forwards;
                 transition: all 0.2s ease-in;
                 z-index: 1;
+                cursor: pointer;
             }
             .gbz-url-row {
                 position: absolute;
@@ -80,11 +81,16 @@
                 transition: all 0.2s ease-in;
                 flex-direction: column-reverse;
                 z-index: 0;
+                display: none;
+            }
+            .gbz-url-row.hidden {
+                display: none;
             }
             .gbz-url-row-image {
                 width: 1.5em;
                 margin-top: 0.2em;
                 box-shadow: 0 0 6px #0000005e;
+                border-radius: 13px
             }
             .gbz-url-row-image.top {
                 margin-top: 0.6em;    
@@ -100,8 +106,10 @@
             }
             .gbz-wrapper:hover .gbz-button {
                 background: white;
-                cursor: pointer;
                 box-shadow: #00000073 0px 0px 12px;
+            }
+            .gbz-wrapper:hover .gbz-url-row {
+                display: flex;
             }
             .gbz-inner {
                 width: 80%;
@@ -194,7 +202,7 @@
         wrapper.appendChild(button);
         const urlRow = document.createElement('div');
         urlRow.id = 'QuickBrainz-UrlRow';
-        urlRow.className = 'gbz-url-row'
+        urlRow.className = 'gbz-url-row hidden'
         const placeHolderUrl = document.createElement('div');
         placeHolderUrl.id = 'QuickBrainz-UrlRow-Gap';
         placeHolderUrl.className = 'gbz-url-row-placeholder'
@@ -224,8 +232,15 @@
 
     function setUrls(urls) {
         const blackListedUrls = ['genius.com']
-        urls = urls.filter((url) => !blackListedUrls.some((bl) => url.includes(bl)))
+        const whiteListedUrls = ['open.spotify.com', 'discogs.com', 'x.com', 'twitter.com', 'instagram.com', 'facebook.com', 'music.apple.com', 'itunes.apple.com', 'bandcamp.com', 'soundcloud.com', 'music.amazon.', 'tidal.com', 'www.youtube.com', 'shazam.com']
+        urls = urls.filter((url) => whiteListedUrls.some((bl) => url.includes(bl)))
+        urls = [...new Set(urls)]
         const urlRow = document.getElementById('QuickBrainz-UrlRow')
+        if (urls.length > 0) {
+            urlRow.classList.remove(['hidden'])
+        } else {
+            urlRow.classList.add(['hidden'])
+        }
         if (urlRow) {
             let oldUrls = urlRow.getElementsByClassName('gbz-url-row-a');
             Array.from(oldUrls).forEach(element => {
@@ -238,7 +253,7 @@
                 a.target = '_blank';
                 const img = document.createElement('img');
                 const urlDomain = new URL(url).hostname.replace(/^www\./, '');
-                img.src = `https://www.google.com/s2/favicons?sz=128&domain=${encodeURIComponent(urlDomain)}`;
+                img.src = `https://favicon.vemetric.com/${encodeURIComponent(urlDomain)}`;
                 img.className = `gbz-url-row-image${top ? ' top': ''}`;
                 a.appendChild(img);
                 return a;
@@ -266,8 +281,10 @@
         let mbUrl = null;
         let urlName = null;
         let results = [];
-        const pageUrl = window.location.href;
-        let response = await fetch(`https://musicbrainz.org/ws/2/url?fmt=json&resource=${encodeURIComponent(pageUrl)}&inc=artist-rels+work-rels+release-group-rels`);
+        const pageUrl = new URL(window.location.href);
+        pageUrl.search = '';
+        const cleanUrl = pageUrl.toString();
+        let response = await fetch(`https://musicbrainz.org/ws/2/url?fmt=json&resource=${encodeURIComponent(cleanUrl)}&inc=artist-rels+work-rels+release-group-rels`);
         if (response.ok) {
             log(`Result found for ${pageUrl}`, "green");
             let url = await response.json();
@@ -337,10 +354,10 @@
         return results;
     }
 
-    async function fetchEntity(mbid, type) {
+    async function fetchEntity(mbid, type, inc= ['url-rels']) {
         log(`Looking up ${type} ${mbid}...`, 'purple')
         try {
-            let response = await fetch(`https://musicbrainz.org/ws/2/${type}/${mbid}?fmt=json&inc=url-rels`)
+            let response = await fetch(`https://musicbrainz.org/ws/2/${type}/${mbid}?fmt=json&inc=${inc.join("+")}`)
             if (response.ok) {
                 return await response.json();
             } else {
@@ -363,10 +380,49 @@
             if (urlResults.length > 0) {
                 const correctTypeResult = urlResults.find((result) => result.type == type.replace('release-group', 'release_group'))
                 if (correctTypeResult) {
-                    let entity = await fetchEntity(urlResults[0].mbid, type);
+                    const typeIncs ={
+                        'artist': ['url-rels'],
+                        'release-group': ['url-rels', 'releases'],
+                        'work': ['url-rels', 'recording-rels']
+                    }
+                    let entity = await fetchEntity(urlResults[0].mbid, type, typeIncs[type]);
                     if (entity) {
-                        const urls = entity.relations?.filter((rel) => rel['target-type'] == 'url').map((urlRel) => urlRel.url.resource)
-                        console.log(entity)
+                        let urls = entity.relations?.filter((rel) => rel['target-type'] == 'url').map((urlRel) => urlRel.url.resource)
+                        if (type == 'release-group'){
+                            const releaseIds = entity?.releases?.map((release) => release.id) || [];
+                            const releases = [];
+                            for (const id of releaseIds) {
+                                console.log(id)
+                                try {
+                                    const release = await fetchEntity(id, 'release', ['url-rels'])
+                                    if (release && release.relations){
+                                        releases.push(release);
+                                    }
+                                } catch (e) {
+                                    log('Failed to fetch release!', 'red', e);
+                                }
+                            }
+                            let releaseUrls = releases.flatMap((release) => release.relations?.filter((rel) => rel['target-type'] == 'url').map((urlRel) => urlRel.url.resource))
+                            urls = [...urls, ...releaseUrls]
+                        } else if (type == 'work') {
+                            console.log(entity)
+                            const recordingIds = entity?.relations?.filter((rel) => rel['target-type'] == 'recording').map((recRel) => recRel.recording.id) || [];
+                            console.log(recordingIds)
+                            const recordings = [];
+                            for (const id of recordingIds) {
+                                console.log(id)
+                                try {
+                                    const release = await fetchEntity(id, 'recording', ['url-rels'])
+                                    if (release && release.relations){
+                                        recordings.push(release);
+                                    }
+                                } catch (e) {
+                                    log('Failed to fetch release!', 'red', e);
+                                }
+                            }
+                            let recordingUrls = recordings.flatMap((release) => release.relations?.filter((rel) => rel['target-type'] == 'url').map((urlRel) => urlRel.url.resource))
+                            urls = [...urls, ...recordingUrls]
+                        }
                         setClass('green', true);
                         if (urls) {
                             setUrls(urls)
