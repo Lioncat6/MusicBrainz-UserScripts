@@ -157,11 +157,11 @@
         }
     }
 
-    async function fetchUrl() {
+    async function fetchUrl(url= undefined) {
         let mbUrl = null;
         let urlName = null;
 
-        const pageUrl = window.location.href;
+        const pageUrl = url || window.location.href;
         let response = await fetch(`https://musicbrainz.org/ws/2/url?fmt=json&resource=${encodeURIComponent(pageUrl)}&inc=artist-rels+work-rels+release-group-rels`);
         if (response.ok) {
             console.log(`${scriptName} %cResult found for ${pageUrl}`, "color: cyan;", "color: green;");
