@@ -232,7 +232,7 @@
 
     function setUrls(urls) {
         const blackListedUrls = ['genius.com']
-        const whiteListedUrls = ['open.spotify.com', 'discogs.com', 'x.com', 'twitter.com', 'instagram.com', 'facebook.com', 'music.apple.com', 'itunes.apple.com', 'bandcamp.com', 'soundcloud.com', 'music.amazon.', 'tidal.com', 'www.youtube.com', 'shazam.com']
+        const whiteListedUrls = ['open.spotify.com', 'discogs.com', 'x.com', 'twitter.com', 'instagram.com', 'facebook.com', 'music.apple.com', 'itunes.apple.com', 'bandcamp.com', 'soundcloud.com', 'music.amazon.', 'tidal.com', 'www.youtube.com', 'shazam.com', 'tiktok.com']
         urls = urls.filter((url) => whiteListedUrls.some((bl) => url.includes(bl)))
         urls = [...new Set(urls)]
         const urlRow = document.getElementById('QuickBrainz-UrlRow')
@@ -458,7 +458,7 @@
 
     injectCss();
     function checkInject() {
-        const pageBlacklist = ['apple_music_player', '/discussions/'];
+        const pageBlacklist = ['apple_music_player', '/discussions/', 'search/embed'];
         if (!checkButton() && !pageBlacklist.some((string) => document.location.href.includes(string))) {
             try {
                 injectButton();
