@@ -19,35 +19,10 @@
     "use strict";
     let artistName = document.getElementsByClassName("artistheader")[0].getElementsByTagName("h1")[0];
     let mbid = document.location.pathname.split("/artist/")[1].split("/")[0];
-    let spIcons = document.getElementsByClassName("spotify-favicon");
-    if (spIcons) {
-        let spids = "";
-        let spId = "";
-        for (let icon of spIcons) {
-            let spUrl = icon.getElementsByTagName("a")[0];
-            if (spUrl) {
-                spUrl = spUrl.href;
-            } else {
-                spUrl = "";
-            }
-            if (spUrl.match(/\/artist\/([^/?]+)/)) {
-                spId = spUrl.match(/\/artist\/([^/?]+)/)[1];
-                if (spids == "") {
-                    spids = spId;
-                } else {
-                    spids = spids + "," + spId;
-                }
-            }
-        }
-        let url = `https://sambl.lioncat6.com/artist/?spid=${spids}&artist_mbid=${mbid}`;
+    let externalLinks = document.getElementsByClassName("external_links")[0];
+    if (externalLinks) {
         
-        if (spIcons.length > 1) {
-            url = `https://sambl.lioncat6.com/artist/?spids=${spids}&artist_mbid=${mbid}`;
-        }
-        if (spId = "" || !spId) {
-            url = `https://sambl.lioncat6.com/search/?query=${artistName.innerText}`;
-        }
-        let htmlToInsert = `<a href="${url}" target="_blank"><img src="https://sambl.lioncat6.com/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
-        artistName.innerHTML = artistName.innerHTML + htmlToInsert;
     }
+    let htmlToInsert = `<a href="${url}" target="_blank"><img src="https://sambl.lioncat6.com/assets/images/favicon.svg" alt="SAMBL Icon" style="width: 18px; transform: scale(1.8) translate(6px, 2.5px);"></a>`;
+    artistName.innerHTML = artistName.innerHTML + htmlToInsert;
 })();
