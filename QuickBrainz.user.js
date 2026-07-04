@@ -5,7 +5,7 @@
 // @homepageURL https://github.com/Lioncat6/MusicBrainz-UserScripts/
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=genius.com
 // @grant       none
-// @version     04-24-2026
+// @version     07-04-2026
 // @author      Lioncat6
 // @description Genius MusicBrainz lookup tools
 // @downloadURL https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/main/QuickBrainz.user.js
