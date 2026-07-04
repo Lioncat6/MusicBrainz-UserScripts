@@ -36,3 +36,9 @@ Adds MusicBrainz buttons to all Genius pages & Artist links
 <img width="300" height="232" alt="image" src="https://github.com/user-attachments/assets/b8eb5037-3740-4619-a9ea-7e0a2995f0a6" />
 <img width="450" height="450" alt="image" src="https://github.com/user-attachments/assets/5fb6c72d-fca2-4186-837f-d90f2affda15" />
 <img width="450" height="327" alt="image" src="https://github.com/user-attachments/assets/5777e51d-a849-4b80-ada8-90423f3e1f54" />
+
+## [QuickBrainz](https://github.com/Lioncat6/MusicBrainz-UserScripts/blob/main/QuickBrainz.user.js)
+### **[Import Userscript](https://github.com/Lioncat6/MusicBrainz-UserScripts/raw/refs/heads/main/QuickBrainz.user.js)** [[View on greasyfork](https://greasyfork.org/en/scripts/585629-quickbrainz)]
+Adds a floating MusicBrainz button to all genius pages, looking up the current entity and pulling relevant links
+<img width="449" height="789" alt="image" src="https://github.com/user-attachments/assets/b101d6f0-56c5-4652-b8bf-c7e15b8ff3f3" />
+
